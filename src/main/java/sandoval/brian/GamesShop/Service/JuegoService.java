@@ -1,4 +1,4 @@
-package sandoval.brian.GamesShop.service;
+package sandoval.brian.GamesShop.Service;
 
 import org.springframework.util.StringUtils;
 import sandoval.brian.GamesShop.model.Juego;
@@ -61,4 +61,9 @@ public class JuegoService {
     public void eliminarJuego(Long id){
         juegoRepository.deleteById(id);
     }
+
+    public List<Juego> obtenerJuegosPorUsuario(Long usuarioId){
+        return juegoRepository.findByUsuarioId(usuarioId);
+    }
+
 }

@@ -1,5 +1,6 @@
 package sandoval.brian.GamesShop.Service;
 
+import jakarta.servlet.http.HttpSession;
 import sandoval.brian.GamesShop.model.Usuario;
 import sandoval.brian.GamesShop.Repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class UsuarioService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private HttpSession session;
 
     /**
      * Registra un usuario guardando su contraseña cifrada con BCrypt.
@@ -42,5 +46,18 @@ public class UsuarioService {
             }
         }
         return null;
+    }
+
+    public Usuario obtenerUsuarioLogueado(){
+        Long usuarioID = (Long) session.getAttribute("usuario_id");
+
+        if (usuarioID != null){
+            Optional<Usuario> usuario = usuarioRepository.findById(usuarioID);
+            if (usuario.isPresent()){
+                return usuario. get();
+            }
+        }
+        return null;
+
     }
 }

@@ -1,5 +1,6 @@
 package sandoval.brian.GamesShop.controller;
 
+import jakarta.servlet.http.HttpSession;
 import sandoval.brian.GamesShop.model.Usuario;
 import sandoval.brian.GamesShop.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +27,15 @@ public class AuthController {
     @PostMapping("/login")
     public String procesarLogin(@RequestParam("email") String email,
                                 @RequestParam("password") String password,
-                                Model model) {
+                                Model model,
+                                HttpSession session) {
 
         Usuario usuario = usuarioService.autenticarUsuario(email, password);
 
         if (usuario != null) {
             // Las credenciales son correctas, pero todavía no recordamos quién es:
             // en cuanto cambie de página, la aplicación lo olvida.
-            model.addAttribute("mensaje", "Bienvenido, " + usuario.getNombre());
+            session.setAttribute("usuario_id", usuario.getId());
             return "login";
         } else {
             model.addAttribute("error", "Credenciales inválidas. Inténtalo de nuevo.");

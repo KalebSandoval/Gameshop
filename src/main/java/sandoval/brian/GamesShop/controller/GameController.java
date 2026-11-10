@@ -1,7 +1,9 @@
 package sandoval.brian.GamesShop.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import sandoval.brian.GamesShop.Service.UsuarioService;
 import sandoval.brian.GamesShop.model.Juego;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import sandoval.brian.GamesShop.model.Usuario;
-import sandoval.brian.GamesShop.service.JuegoService;
+import sandoval.brian.GamesShop.Service.JuegoService;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,6 +28,9 @@ public class GameController {
     @Autowired
     private JuegoService juegoService;
 
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     @GetMapping("/fragments-demo")
     public String fragmentsDemo() {
@@ -53,11 +58,11 @@ public class GameController {
                                @RequestParam("precio") Double precio,
                                @RequestParam("categoria") String categoria,
                                @RequestParam("portada") MultipartFile portada,
-                               @RequestParam("usuario")Usuario usuario) {
+                               HttpSession httpSession) {
 
         String nombreArchivo = "default.png";
 
-        Juego juegoNuevo = new Juego(null, titulo, descripcion, nombreArchivo, precio, categoria, usuario);
+        Juego juegoNuevo = new Juego(null, titulo, descripcion, nombreArchivo, precio, categoria, usuarioService.obtenerUsuarioLogueado());
         juegoService.guardarJuego(juegoNuevo, portada);
 
         return "redirect:/juegos";

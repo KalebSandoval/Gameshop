@@ -17,6 +17,11 @@ public interface JuegoRepository extends JpaRepository<Juego,Long> {
 
     List<Juego> findByTituloStartingWithIgnoreCase(String titulo);
 
+    List<Juego> findByUsuarioId(Long usuarioID);
+
+    @Query("SELECT j FROM Juego j WHERE LOWER(j.titulo) LIKE LOWER(CONCAT('%', :palabra, '%')) OR LOWER(j.categoria) LIKE LOWER(CONCAT('%', :palabra, '%'))")
+    List<Juego> buscarPorTituloOCategoria(@Param("palabra") String palabra);
+
     @Query("SELECT j FROM Juego j where j.precio <: precioComparacion and LOWER(j.titulo) LIKE CONCAT(:letra,'%')")
     List<Juego> buscarPrecioMenorAQueEmpiecePor(@Param("precioComparacion") Double precioComparacion, @Param("letra") String letra);
 }
