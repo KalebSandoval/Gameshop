@@ -25,7 +25,7 @@ public class JuegoService {
     }
 
     public void guardarJuego(Juego juego, MultipartFile portada) {
-        String urlImagen = "default.png";
+        String urlImagen = juego.getPortadaUrl() != null ? juego.getPortadaUrl() : "default.png";
 
         if (portada != null && !portada.isEmpty()) {
             try {

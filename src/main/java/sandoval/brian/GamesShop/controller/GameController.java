@@ -65,18 +65,30 @@ public class GameController {
         Juego juegoNuevo = new Juego(null, titulo, descripcion, nombreArchivo, precio, categoria, usuarioService.obtenerUsuarioLogueado());
         juegoService.guardarJuego(juegoNuevo, portada);
 
-        return "redirect:/juegos";
+        return "redirect:/mis-juegos";
     }
+
+    @GetMapping("/mis-juegos")
+    public String dashboard(Model model){
+        Usuario logueado = usuarioService.obtenerUsuarioLogueado();
+        model.addAttribute("juegos", juegoService.obtenerJuegosPorUsuario(logueado.getId()));
+        model.addAttribute("usuario", logueado);
+
+        return "mis-juegos";
+    }
+
 
     @GetMapping("/juegos/editar/{id}")
     public String editarJuego(@PathVariable Long id, Model model) {
         Juego juego = juegoService.obtenerJuegoPorId(id);
+        Usuario logueado = usuarioService.obtenerUsuarioLogueado();
 
-        if (juego != null) {
+
+        if (juego != null && juego.getUsuario().getId().equals(logueado.getId())) {
             model.addAttribute("juego", juego);
             return "formulario";
         }
-        return "juegos";
+        return "redirect:/mis-juegos";
     }
 
     @PostMapping("/juegos/editar/{id}")
@@ -111,7 +123,7 @@ public class GameController {
                 }
             }
         }
-        return "redirect:/juegos";
+        return "redirect:/mis-juegos";
     }
 
     @GetMapping("/juego/{id}")
@@ -128,13 +140,15 @@ public class GameController {
     }
 
 
-    @PostMapping("/juegos/eliminar{id}")
+    @PostMapping("/juegos/eliminar/{id}")
     public String eliminarJuego(@PathVariable Long id) {
         Juego juego = juegoService.obtenerJuegoPorId(id);
+        Usuario logueado = usuarioService.obtenerUsuarioLogueado();
 
-        if (juego != null) {
+
+        if (juego != null && juego.getUsuario().getId().equals(logueado.getId())) {
             juegoService.eliminarJuego(id);
         }
-        return "redirect:/juegos";
+        return "redirect:/mis-juegos";
     }
 }

@@ -36,7 +36,7 @@ public class AuthController {
             // Las credenciales son correctas, pero todavía no recordamos quién es:
             // en cuanto cambie de página, la aplicación lo olvida.
             session.setAttribute("usuario_id", usuario.getId());
-            return "login";
+            return "redirect:/mis-juegos";
         } else {
             model.addAttribute("error", "Credenciales inválidas. Inténtalo de nuevo.");
             return "login";
@@ -54,5 +54,11 @@ public class AuthController {
     public String procesarRegistro(Usuario usuario) {
         usuarioService.registrarUsuario(usuario);
         return "redirect:/login?registrado=true";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+        session.invalidate();
+        return "redirect:/";
     }
 }
